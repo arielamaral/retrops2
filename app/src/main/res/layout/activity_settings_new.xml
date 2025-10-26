@@ -38,7 +38,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_section_general"
-                style="@style/Widget.ARMSX2.SegmentedButton"
+                style="@style/Widget.RETROps2.SegmentedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="0dp"
@@ -46,7 +46,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_section_graphics"
-                style="@style/Widget.ARMSX2.SegmentedButton"
+                style="@style/Widget.RETROps2.SegmentedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="0dp"
@@ -54,7 +54,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_section_performance"
-                style="@style/Widget.ARMSX2.SegmentedButton"
+                style="@style/Widget.RETROps2.SegmentedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="0dp"
@@ -62,7 +62,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_section_controller"
-                style="@style/Widget.ARMSX2.SegmentedButton"
+                style="@style/Widget.RETROps2.SegmentedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="0dp"
@@ -70,7 +70,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_section_storage"
-                style="@style/Widget.ARMSX2.SegmentedButton"
+                style="@style/Widget.RETROps2.SegmentedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="0dp"
@@ -78,7 +78,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_section_achievements"
-                style="@style/Widget.ARMSX2.SegmentedButton"
+                style="@style/Widget.RETROps2.SegmentedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="0dp"

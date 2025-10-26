@@ -474,7 +474,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="About ARMSX2"
+            android:text="About RETROps2"
             android:textAllCaps="false"
             android:textColor="?attr/colorOnSurface"
             app:icon="@drawable/info_24px"

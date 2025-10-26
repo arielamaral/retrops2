@@ -212,7 +212,7 @@ static std::mutex s_discord_mutex;
 static std::shared_ptr<discordpp::Client> s_discord_client;
 static uint64_t s_discord_application_id = 0;
 static std::string s_discord_custom_scheme;
-static std::string s_discord_display_name = "ARMSX2";
+static std::string s_discord_display_name = "RETROps2";
 static std::string s_discord_large_image_key = "app_icon";
 static bool s_discord_logged_in = false;
 static bool s_discord_authorizing = false;
@@ -379,7 +379,7 @@ void AndroidDiscordApplyPresenceLocked()
 		return;
 
 	discordpp::Activity activity;
-	activity.SetName(s_discord_display_name.empty() ? std::string("ARMSX2") : s_discord_display_name);
+	activity.SetName(s_discord_display_name.empty() ? std::string("RETROps2") : s_discord_display_name);
 	activity.SetType(discordpp::ActivityTypes::Playing);
 	activity.SetStatusDisplayType(discordpp::StatusDisplayTypes::State);
 	activity.SetState(state);
@@ -391,7 +391,7 @@ void AndroidDiscordApplyPresenceLocked()
 	{
 		discordpp::ActivityAssets assets;
 		assets.SetLargeImage(s_discord_large_image_key);
-		assets.SetLargeText(s_discord_display_name.empty() ? std::string("ARMSX2") : s_discord_display_name);
+		assets.SetLargeText(s_discord_display_name.empty() ? std::string("RETROps2") : s_discord_display_name);
 		activity.SetAssets(assets);
 	}
 

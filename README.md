@@ -1,72 +1,113 @@
+![RETROps2 Icon](app_icons/icon.png)
 
-[![Discord Server](https://img.shields.io/discord/309643527816609793?color=%235CA8FA&label=ARMSX2%20Discord&logo=discord&logoColor=white)](https://discord.gg/KwAChKDctz)
-[![Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dendel%26type%3Dpatrons&style=for-the-badge)](https://www.patreon.com/ARMSX2?utm_campaign=creatorshare_creator)
+# RETROps2
 
+> **⚠️ IMPORTANTE: Fork Pessoal e de Estudos**
+>
+> Este é um fork **pessoal** do projeto ARMSX2, criado exclusivamente para **fins de estudo e uso pessoal**.
+>
+> **NÃO há qualquer finalidade comercial ou lucrativa.**
+>
+> **Todos os méritos, créditos e reconhecimento pertencem ao desenvolvedor original do ARMSX2.**
+>
+> 👉 **Projeto Oficial ARMSX2:** https://github.com/ARMSX2/ARMSX2
+>
+> Por favor, acompanhe e apoie o incrível trabalho do time oficial do ARMSX2!
 
-![ARMSX2 Icon](app_icons/icon.png)
+---
 
+## 📖 Sobre o Projeto
 
-# ARMSX2
+RETROps2 é um fork pessoal do ARMSX2, um emulador gratuito e de código aberto de PlayStation 2 (PS2) para dispositivos ARM, baseado no PCSX2 e PCSX2_ARM64. O objetivo é emular o hardware do PS2 em dispositivos ARM, utilizando um recompilador que opera como x86 -> arm64 (não arm64 nativo), sujeito a mudanças conforme o desenvolvimento continua.
 
-ARMSX2 is a free and open-source PlayStation 2 (PS2) emulator for ARM devices based on PCSX2 and PCSX2_ARM64. Its purpose is to emulate the PS2's hardware for ARM devices, using a recompiler that operates as x86 -> arm64, not native arm64, this is subject to change as development continues. ARMSX2 allows you to play PS2 games on your mobile android phone, as well as on iOS, Linux, and Windows devices.
+Este fork permite jogar games de PS2 em dispositivos Android móveis, bem como em dispositivos iOS, Linux e Windows.
 
-# Project Details
+## 🎯 Detalhes do Projeto Original
 
-ARMSX2 began after years of there being no open source PS2 emulator for ARM systems, and so developer [@MoonPower](https://github.com/momo-AUX1) with the support of [@jpolo1224](https://github.com/jpolo1224) decided to try their hand at porting a new PS2 emulator for Android, forking from the repository PCSX2_ARM64 by developer Pontos. Moon has and will continue doing his best to fill in the gaps and make this into a complete emulator, with the goal to have version parity with PCSX2. This project is not officially associated with PCSX2, and we are not associated with any other forks made from the original repository. This is our own attempt at continuing PS2 emulation on Android, iOS, and MacOS. The emulator currently operates as x86 -> arm64, not native arm64, so the performance may not be as good as AetherSX2 currently, however things are subject to change as development goes on.
+O ARMSX2 foi criado após anos sem haver um emulador de PS2 de código aberto para sistemas ARM. O projeto original foi desenvolvido por **MoonPower** com o apoio de **jpolo1224**, como um fork do repositório PCSX2_ARM64 do desenvolvedor Pontos.
 
-# System Requirements
+O emulador atualmente opera como x86 -> arm64, não arm64 nativo, então o desempenho pode não ser tão bom quanto o AetherSX2 atualmente, porém isso está sujeito a mudanças conforme o desenvolvimento progride.
 
-ARMSX2 supports any ARM capable device, including Android, iOS, Linux, and Windows platforms (eventually), should work as well). Please note that performance will also depend on your devices hardware capabilities, we have done our best to optimize for low end devices and will continue to do so.
+## 💻 Requisitos do Sistema
 
-Please note that a BIOS dump from a legitimately-owned PS2 console is required to use the emulator.
+- Dispositivos com processador ARM (Android, iOS, Linux, Windows)
+- O desempenho dependerá das capacidades de hardware do seu dispositivo
+- **Obrigatório:** BIOS dump de um console PS2 legítimo
 
-# Website 
-https://armsx2.net/
+## 🙏 Créditos e Reconhecimentos
 
-Any other website is not affiliated with ARMSX2. 
+**TODO O MÉRITO E CRÉDITO VAI PARA:**
 
-# Google Play Store
-ARMSX2 is available on the Google Play Store once released. 
+- **ARMSX2** - Projeto oficial que tornou este fork possível
+- **MoonPower** - Desenvolvedor principal do ARMSX2
+- **jpolo1224** - Desenvolvedor e colaborador do ARMSX2
+- **PCSX2 Team** - Equipe lendária do emulador PCSX2 original
+- **Pontos** - Desenvolvedor do PCSX2_ARM64, base do ARMSX2
+- **fffathur e EM2008** - Criação do logo
+- **tanosshi** - Desenvolvimento do website do ARMSX2
 
-# Affiliation 
-We are NOT affiliated with ARM Holding LTD in any way shape or form. We chose the name ARMSX2 since it runs on ARM devices, and seek no commercial incentive from the emulator. The most we accept is voluntary donations. Thank you. 
+## 🎯 Objetivos Deste Fork Pessoal
 
-# Additional Credits 
-[PCSX2](https://github.com/PCSX2/pcsx2) - ARMSX2 would not be possible without the legendary work from the PCSX2 team and their patience and understanding regarding this project!
-
-[PCSX2_ARM64](https://github.com/pontos2024/PCSX2_ARM64) - ARMSX2 originally started off as a fork of developer Pontos work. 
-
-Thank you to [@fffathur](https://github.com/fffathur) and [@EM2008](https://github.com/EM20080) for creating and working on the logo! 
-
-Thank you to developers [@tanosshi](https://github.com/tanosshi) [@jpolo1224](https://github.com/jpolo1224) [@MoonPower](https://github.com/momo-AUX1) for working on the ARMSX2 website!
-
-# Roadmap
-Here's a roadmap of the things you can expect from ARMSX2 in the future:
-
-| Task | Priority |
+| Tarefa | Prioridade |
 | --- | --- |
-| Fix Eclipse GPUs | High |
-| Fix Mali Crashes | Highest |
-| Nintendo Switch support | Medium |
-| Update to latest core | High |
-| Update design to Material expressive | Low |
-| Migrate to Kotlin | Medium | 
+| Corrigir compatibilidade com GPUs Qualcomm (Adreno) | Altíssima |
+| Otimização para Qualcomm G3x Gen 2 | Alta |
+| Estudos de otimização de performance | Média |
+| Testes e documentação em Português | Média |
 
+## ⚖️ Licença e Uso
 
-# Why are there .js and .jsx files?
-Originally as a curious idea the react native screens were just an experiment i decided to keep they are extremely barebones and will either be finalized in a seperate branch (armsx2-rn) or removed altogether They do not affect performance as they are hidden by default and not executed. Any PR to them is welcome!
+Este é um projeto de **código aberto** (GPL-3.0) mantido para **fins educacionais e de estudo pessoal**.
 
-### To start developing with ARMSX2 RN do the following root:
+**Este fork NÃO:**
+- ❌ Tem fins comerciais
+- ❌ Visa lucro ou monetização
+- ❌ Representa o projeto oficial ARMSX2
 
-1. First install the deps:
+**Por favor:**
+- ✅ Acompanhe o projeto oficial: https://github.com/ARMSX2/ARMSX2
+- ✅ Apoie os desenvolvedores originais
+- ✅ Contribua com o projeto oficial sempre que possível 
+
+---
+
+## 🛠️ Desenvolvimento
+
+### Por que existem arquivos .js e .jsx?
+
+Originalmente como uma ideia experimental, as telas React Native foram mantidas no projeto. Elas são extremamente básicas e serão finalizadas em uma branch separada (retrops2-rn) ou removidas completamente. Não afetam a performance pois estão ocultas por padrão e não são executadas. Pull requests são bem-vindos!
+
+### Para começar a desenvolver com RETROps2 RN:
+
+1. Instale as dependências:
 ```sh
-(npm/pnpm/bun) install
+npm install
+# ou
+pnpm install
+# ou
+bun install
 ```
 
-
-2. Compile ARMSX2 With the react native core:
+2. Compile o RETROps2 com o core React Native:
 ```sh
 ./gradlew assembleDebug -PenableRN=true
 ```
 
-And now you will have a new button appear on the top right of the game selector screen click it and start developing with hot reload and see your changes without recompiling (note: compiling RN switches the emucore from static to shared).
+Um novo botão aparecerá no canto superior direito da tela de seleção de jogos. Clique nele e comece a desenvolver com hot reload, vendo suas alterações sem necessidade de recompilar.
+
+**Nota:** Compilar com RN muda o emucore de estático para compartilhado.
+
+---
+
+## 📞 Contato
+
+**Para questões sobre o projeto oficial ARMSX2:**
+- Visite: https://github.com/ARMSX2/ARMSX2
+
+**Para questões específicas deste fork pessoal:**
+- Abra uma issue neste repositório (apenas para fins educacionais)
+
+---
+
+**Última atualização:** Janeiro 2025
+**Versão:** 0.0.1 (Fork Pessoal)

@@ -351,7 +351,7 @@ public class SettingsActivity extends AppCompatActivity {
                 btnDiscordLogout.setEnabled(true);
             }
         } else {
-            tvDiscordStatus.setText("Connect to show your ARMSX2 activity on Discord.");
+            tvDiscordStatus.setText("Connect to show your RETROps2 activity on Discord.");
             btnDiscordConnect.setEnabled(true);
             btnDiscordConnect.setText("Connect Discord");
             if (tvDiscordLoggedInAs != null) {
@@ -1741,7 +1741,7 @@ public class SettingsActivity extends AppCompatActivity {
 	private void showStorageAccessError(File targetDir) {
 		boolean canGrant = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !DataDirectoryManager.hasAllFilesAccess();
 		String message = "Android denied direct file access for:\n" + targetDir.getAbsolutePath() +
-			"\n\nGrant 'Allow access to all files' in system settings or choose a folder inside ARMSX2's storage.";
+			"\n\nGrant 'Allow access to all files' in system settings or choose a folder inside RETROps2's storage.";
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this)
 				.setTitle("Permission required")
 				.setMessage(message)
@@ -1777,8 +1777,8 @@ public class SettingsActivity extends AppCompatActivity {
 			try { 
 				versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName; 
 			} catch (Exception ignored) {}
-			String msg = "ARMSX2 (" + versionName + ")\n" +
-					"by MoonPower\n\n" +
+			String msg = "RETROps2 (" + versionName + ")\n" +
+					"Fork of ARMSX2 by MoonPower\n\n" +
 					"Thanks to:\n" +
 					"- pontos2024 (emulator base)\n" +
 					"- PCSX2 v2.3.430 (core emulator)\n" +

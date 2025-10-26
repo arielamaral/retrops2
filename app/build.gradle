@@ -41,7 +41,7 @@ def sanitizeScheme = { String raw ->
     return trimmed
 }
 def discordSchemeFromEnv = sanitizeScheme(discordProps.getProperty("APPLICATION_SCHEME", ""))
-def discordCallbackScheme = discordSchemeFromEnv ? discordSchemeFromEnv : (discordApplicationId ? "discord-${discordApplicationId}" : "armsx2")
+def discordCallbackScheme = discordSchemeFromEnv ? discordSchemeFromEnv : (discordApplicationId ? "discord-${discordApplicationId}" : "retrops2")
 
 android {
     namespace 'kr.co.iefriends.pcsx2'

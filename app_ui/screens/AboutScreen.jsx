@@ -206,7 +206,7 @@ function AboutScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* App Info Card */}
         <View style={[styles.card, { backgroundColor: colors.surfaceContainer, borderColor: colors.outline }]}>
-          <Text style={[styles.cardHeader, { color: colors.primary }]}>ARMSX2</Text>
+          <Text style={[styles.cardHeader, { color: colors.primary }]}>RETROps2</Text>
           <Text style={[styles.appVersion, { color: colors.onSurface }]}>Version 1.0.0</Text>
           <Text style={[styles.subtitle, { color: colors.primary }]}>by MoonPower</Text>
         </View>

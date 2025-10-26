@@ -2067,7 +2067,24 @@ bool GSDeviceVK::Create(GSVSyncMode vsync_mode, bool allow_present_throttle)
 
 	if (!CheckFeatures())
 	{
-		Host::ReportErrorAsync("GS", TRANSLATE_SV("GSDeviceVK", "Your GPU does not support the required Vulkan features."));
+		const u32 vendorID = m_device_properties.vendorID;
+		const u32 deviceID = m_device_properties.deviceID;
+
+		// Check if this is a known problematic Adreno GPU
+		if (vendorID == 0x5143u)
+		{
+			const char* gpuName = m_device_properties.deviceName;
+			Host::ReportFormattedErrorAsync("GS",
+				"Vulkan initialization failed on %s (Adreno GPU).\n\n"
+				"Your device may have better compatibility with OpenGL renderer.\n"
+				"Please try switching to OpenGL in Graphics settings.\n\n"
+				"Device ID: 0x%08X",
+				gpuName, deviceID);
+		}
+		else
+		{
+			Host::ReportErrorAsync("GS", TRANSLATE_SV("GSDeviceVK", "Your GPU does not support the required Vulkan features."));
+		}
 		return false;
 	}
 
@@ -2671,6 +2688,35 @@ bool GSDeviceVK::CheckFeatures()
 			Console.WriteLn("VK: Forcing vertex-based expansion for points/lines on mobile GPU (vendor 0x%X).", vendorID);
 		m_features.point_expand = false;
 		m_features.line_expand = false;
+
+		// Additional workarounds for Qualcomm Adreno 740 (G3x Gen 2) and similar GPUs
+		// These GPUs may have driver issues with certain Vulkan features
+		const u32 deviceID = m_device_properties.deviceID;
+		const bool isAdreno740 = (deviceID >= 0x43050a01 && deviceID <= 0x43050aff); // Adreno 740 device ID range
+
+		if (isAdreno740)
+		{
+			Console.Warning("VK: Detected Adreno 740 (Qualcomm G3x Gen 2).");
+			Console.Warning("VK: Applying workarounds for known driver issues.");
+
+			// Disable geometry shader features if not fully supported
+			if (!m_device_features.geometryShader)
+			{
+				Console.Warning("VK: Geometry shader unavailable, disabling primitive_id.");
+				m_features.primitive_id = false;
+			}
+
+			// Force conservative settings for better stability
+			if (!m_features.stencil_buffer)
+			{
+				Console.Warning("VK: Stencil buffer unavailable on this device.");
+			}
+
+			if (!m_features.texture_barrier)
+			{
+				Console.Warning("VK: Texture barriers disabled, some effects may not work correctly.");
+			}
+		}
 	}
 
 	DevCon.WriteLn("Optional features:%s%s%s%s%s", m_features.primitive_id ? " primitive_id" : "",

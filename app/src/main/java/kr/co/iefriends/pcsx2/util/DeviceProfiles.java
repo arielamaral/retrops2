@@ -1,21 +1,21 @@
 
 /*
 
-By MoonPower (Momo-AUX1) GPLv3 License
-   This file is part of ARMSX2.
+Originally from ARMSX2 by MoonPower (Momo-AUX1) - GPLv3 License
+   This file is part of RETROps2, a fork of ARMSX2.
 
-   ARMSX2 is free software: you can redistribute it and/or modify
+   RETROps2 is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
-   ARMSX2 is distributed in the hope that it will be useful,
+   RETROps2 is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with ARMSX2.  If not, see <http://www.gnu.org/licenses/>.
+   along with RETROps2.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
@@ -86,5 +86,57 @@ public final class DeviceProfiles {
             return context.getString(R.string.app_name_desktop);
         }
         return defaultName;
+    }
+
+    /**
+     * Detects if the device is using a Qualcomm Adreno GPU
+     */
+    public static boolean isAdrenoGPU() {
+        try {
+            String glRenderer = android.opengl.GLES20.glGetString(android.opengl.GLES20.GL_RENDERER);
+            if (glRenderer != null) {
+                return glRenderer.toLowerCase().contains("adreno");
+            }
+        } catch (Exception e) {
+            // Fallback: check SoC model
+            String hardware = Build.HARDWARE.toLowerCase();
+            String board = Build.BOARD.toLowerCase();
+            return hardware.contains("qcom") || hardware.contains("qualcomm") ||
+                   board.contains("kalama") || board.contains("pineapple");
+        }
+        return false;
+    }
+
+    /**
+     * Detects if the device is using Qualcomm G3x Gen 2 (Adreno 740)
+     * This SoC is known to have specific Vulkan compatibility issues
+     */
+    public static boolean isQualcommG3xGen2() {
+        String hardware = Build.HARDWARE.toLowerCase();
+        String board = Build.BOARD.toLowerCase();
+        String soc = Build.SOC_MODEL != null ? Build.SOC_MODEL.toLowerCase() : "";
+
+        // G3x Gen 2 uses "kalama" codename (SM8550 variant)
+        return hardware.contains("kalama") || board.contains("kalama") ||
+               soc.contains("sm8550") || soc.contains("g3x");
+    }
+
+    /**
+     * Returns recommended renderer for the current device
+     * @return "opengl" or "vulkan"
+     */
+    public static String getRecommendedRenderer() {
+        if (isQualcommG3xGen2()) {
+            // G3x Gen 2 has better OpenGL ES compatibility
+            android.util.Log.i("RETROps2", "Detected Qualcomm G3x Gen 2 - recommending OpenGL renderer");
+            return "opengl";
+        }
+        if (isAdrenoGPU()) {
+            // Older Adreno GPUs may have Vulkan issues
+            android.util.Log.i("RETROps2", "Detected Adreno GPU - recommending OpenGL renderer");
+            return "opengl";
+        }
+        // Default to Vulkan for other devices
+        return "vulkan";
     }
 }

@@ -1003,7 +1003,7 @@ public class MainActivity extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> startActivityResultSaveChd = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (pendingChdCachePath == null) {
-                    android.util.Log.w("ARMSX2_CHD", "Save handler invoked with no pending CHD path");
+                    android.util.Log.w("RETROps2_CHD", "Save handler invoked with no pending CHD path");
                     return;
                 }
 
@@ -1014,27 +1014,27 @@ public class MainActivity extends AppCompatActivity {
                 pendingChdDisplayName = null;
 
                 if (!chdFile.exists()) {
-                    android.util.Log.e("ARMSX2_CHD", "Pending CHD file missing from cache: " + cachePath);
+                    android.util.Log.e("RETROps2_CHD", "Pending CHD file missing from cache: " + cachePath);
                     showConversionResult(false, "Could not locate the converted CHD file. Please try converting again.");
                     return;
                 }
 
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null && result.getData().getData() != null) {
                     Uri destinationUri = result.getData().getData();
-                    android.util.Log.d("ARMSX2_CHD", "User selected destination URI: " + destinationUri);
+                    android.util.Log.d("RETROps2_CHD", "User selected destination URI: " + destinationUri);
                     boolean saved = saveChdToUri(chdFile, destinationUri);
                     if (saved) {
                         if (!chdFile.delete()) {
-                            android.util.Log.w("ARMSX2_CHD", "Failed to delete cached CHD after saving: " + cachePath);
+                            android.util.Log.w("RETROps2_CHD", "Failed to delete cached CHD after saving: " + cachePath);
                         } else {
-                            android.util.Log.d("ARMSX2_CHD", "Deleted cached CHD after successful save");
+                            android.util.Log.d("RETROps2_CHD", "Deleted cached CHD after successful save");
                         }
                         showConversionResult(true, "CHD saved to the selected location.");
                     } else {
                         showConversionResult(false, "Failed to save CHD. The converted file is still available in the app cache:\n" + cachePath);
                     }
                 } else {
-                    android.util.Log.i("ARMSX2_CHD", "User cancelled CHD save dialog");
+                    android.util.Log.i("RETROps2_CHD", "User cancelled CHD save dialog");
                     showConversionResult(false, "Save cancelled. The converted CHD remains in the app cache:\n" + cachePath);
                 }
             });
@@ -1137,7 +1137,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void ensureBiosPresent() {
     if (!hasBios()) {
-        Toast.makeText(this, "ARMSX2 no bios found!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "RETROps2 no bios found!", Toast.LENGTH_LONG).show();
         new MaterialAlertDialogBuilder(this)
             .setMessage("No PS2 BIOS found. Please choose a BIOS file.")
             .setCancelable(true)
@@ -2135,8 +2135,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         } catch (Exception ignored) {}
-        String message = "ARMSX2 (" + versionName + ")\n" +
-                "by MoonPower\n\n" +
+        String message = "RETROps2 (" + versionName + ")\n" +
+                "Fork of ARMSX2 by MoonPower\n\n" +
                 "Thanks to:\n" +
                 "- pontos2024 (emulator base)\n" +
                 "- PCSX2 v2.3.430 (core emulator)\n" +
@@ -2589,8 +2589,8 @@ public class MainActivity extends AppCompatActivity {
         btnAbout.setOnClickListener(v -> {
         String versionName = "";
         try { versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName; } catch (Exception ignored) {}
-        String msg = "ARMSX2 (" + versionName + ")\n" +
-            "by MoonPower\n\n" +
+        String msg = "RETROps2 (" + versionName + ")\n" +
+            "Fork of ARMSX2 by MoonPower\n\n" +
             "Thanks to:\n" +
             "- pontos2024 (emulator base)\n" +
             "- PCSX2 v2.3.430 (core emulator)\n" +
@@ -3240,7 +3240,7 @@ public class MainActivity extends AppCompatActivity {
     private void showStorageAccessError(File targetDir) {
         boolean canGrant = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !DataDirectoryManager.hasAllFilesAccess();
         String message = "Android denied direct file access for:\n" + targetDir.getAbsolutePath() +
-                "\n\nGrant 'Allow access to all files' in system settings or choose a folder inside ARMSX2's storage.";
+                "\n\nGrant 'Allow access to all files' in system settings or choose a folder inside RETROps2's storage.";
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
             .setTitle("Permission required")
             .setMessage(message)
@@ -3304,8 +3304,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void performIsoToChd(Uri isoUri, String isoDisplayName) {
         if (!NativeApp.hasNativeTools) {
-            String errorMsg = "ARMSX2 Native Tools library could not be called, it was probably not bundled with the app please rebuild the app with the library in place.";
-            android.util.Log.e("ARMSX2_CHD", "Library not available: " + errorMsg);
+            String errorMsg = "RETROps2 Native Tools library could not be called, it was probably not bundled with the app please rebuild the app with the library in place.";
+            android.util.Log.e("RETROps2_CHD", "Library not available: " + errorMsg);
             try {
                 new MaterialAlertDialogBuilder(this)
                         .setTitle("Library Not Available")
@@ -3324,62 +3324,62 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 // Get real file path from URI
-                android.util.Log.i("ARMSX2_CHD", "Starting ISO to CHD conversion for: " + isoDisplayName);
-                android.util.Log.i("ARMSX2_CHD", "Input URI: " + isoUri.toString());
+                android.util.Log.i("RETROps2_CHD", "Starting ISO to CHD conversion for: " + isoDisplayName);
+                android.util.Log.i("RETROps2_CHD", "Input URI: " + isoUri.toString());
                 
                 inputPath = getFilePathFromUri(isoUri);
                 if (inputPath == null) {
                     resultMessage = "Could not access the selected ISO file. Please ensure the file is accessible.";
-                    android.util.Log.e("ARMSX2_CHD", "Failed to get file path from URI: " + isoUri.toString());
+                    android.util.Log.e("RETROps2_CHD", "Failed to get file path from URI: " + isoUri.toString());
                     return;
                 }
-                android.util.Log.i("ARMSX2_CHD", "Input path resolved to: " + inputPath);
+                android.util.Log.i("RETROps2_CHD", "Input path resolved to: " + inputPath);
 
                 // Generate output CHD path to match what Rust will create 
                 outputPath = inputPath.replaceAll("\\.iso$", ".chd");
-                android.util.Log.i("ARMSX2_CHD", "Expected output path: " + outputPath);
+                android.util.Log.i("RETROps2_CHD", "Expected output path: " + outputPath);
 
                 // Call native conversion 
-                android.util.Log.i("ARMSX2_CHD", "Calling native conversion...");
+                android.util.Log.i("RETROps2_CHD", "Calling native conversion...");
                 try {
-                    android.util.Log.d("ARMSX2_CHD", "Input path bytes: " + java.util.Arrays.toString(inputPath.getBytes("UTF-8")));
-                    android.util.Log.d("ARMSX2_CHD", "Input path length: " + inputPath.length());
-                    android.util.Log.d("ARMSX2_CHD", "Input path string: '" + inputPath + "'");
+                    android.util.Log.d("RETROps2_CHD", "Input path bytes: " + java.util.Arrays.toString(inputPath.getBytes("UTF-8")));
+                    android.util.Log.d("RETROps2_CHD", "Input path length: " + inputPath.length());
+                    android.util.Log.d("RETROps2_CHD", "Input path string: '" + inputPath + "'");
                 } catch (java.io.UnsupportedEncodingException e) {
-                    android.util.Log.e("ARMSX2_CHD", "Failed to encode path as UTF-8: " + e.getMessage());
+                    android.util.Log.e("RETROps2_CHD", "Failed to encode path as UTF-8: " + e.getMessage());
                 }
                 int result = NativeApp.convertIsoToChd(inputPath);
-                android.util.Log.i("ARMSX2_CHD", "Native conversion returned code: " + result);
+                android.util.Log.i("RETROps2_CHD", "Native conversion returned code: " + result);
                 
                 success = handleConversionResult(result, inputPath, outputPath);
                 
                 if (success) {
                     final String chdCachePath = outputPath;
                     final String chdDisplayName = isoDisplayName;
-                    android.util.Log.i("ARMSX2_CHD", "Conversion succeeded. Prompting user to choose CHD save location.");
+                    android.util.Log.i("RETROps2_CHD", "Conversion succeeded. Prompting user to choose CHD save location.");
                     runOnUiThread(() -> promptForChdSave(chdCachePath, chdDisplayName));
                     resultMessage = null;
                 } else {
                     resultMessage = getErrorMessage(result) + "\n\nInput: " + inputPath + "\nOutput: " + outputPath;
-                    android.util.Log.e("ARMSX2_CHD", "Conversion failed with code " + result + ": " + getErrorMessage(result));
-                    android.util.Log.e("ARMSX2_CHD", "Input: " + inputPath);
-                    android.util.Log.e("ARMSX2_CHD", "Output: " + outputPath);
+                    android.util.Log.e("RETROps2_CHD", "Conversion failed with code " + result + ": " + getErrorMessage(result));
+                    android.util.Log.e("RETROps2_CHD", "Input: " + inputPath);
+                    android.util.Log.e("RETROps2_CHD", "Output: " + outputPath);
                 }
 
             } catch (Throwable e) {
                 resultMessage = "Conversion failed with exception: " + e.getMessage() + 
                               "\n\nInput: " + inputPath + "\nOutput: " + outputPath;
-                android.util.Log.e("ARMSX2_CHD", "Conversion exception: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
-                android.util.Log.e("ARMSX2_CHD", "Input: " + inputPath);
-                android.util.Log.e("ARMSX2_CHD", "Output: " + outputPath);
+                android.util.Log.e("RETROps2_CHD", "Conversion exception: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
+                android.util.Log.e("RETROps2_CHD", "Input: " + inputPath);
+                android.util.Log.e("RETROps2_CHD", "Output: " + outputPath);
             } finally {
                 if (inputPath != null) {
                     File tempFile = new File(inputPath);
                     if (tempFile.exists() && tempFile.getParent().equals(getCacheDir().getAbsolutePath())) {
                         if (tempFile.delete()) {
-                            android.util.Log.d("ARMSX2_CHD", "Cleaned up temporary file: " + inputPath);
+                            android.util.Log.d("RETROps2_CHD", "Cleaned up temporary file: " + inputPath);
                         } else {
-                            android.util.Log.w("ARMSX2_CHD", "Failed to clean up temporary file: " + inputPath);
+                            android.util.Log.w("RETROps2_CHD", "Failed to clean up temporary file: " + inputPath);
                         }
                     }
                 }
@@ -3396,7 +3396,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String getFilePathFromUri(Uri uri) {
-        android.util.Log.d("ARMSX2_CHD", "getFilePathFromUri called with: " + uri.toString());
+        android.util.Log.d("RETROps2_CHD", "getFilePathFromUri called with: " + uri.toString());
         try {
             // Get display name from content resolver
             android.database.Cursor cursor = getContentResolver().query(uri, null, null, null, null);
@@ -3409,7 +3409,7 @@ public class MainActivity extends AppCompatActivity {
                             
                             File cacheDir = getCacheDir();
                             File tempFile = new File(cacheDir, displayName);
-                            android.util.Log.d("ARMSX2_CHD", "Creating temporary file: " + tempFile.getAbsolutePath());
+                            android.util.Log.d("RETROps2_CHD", "Creating temporary file: " + tempFile.getAbsolutePath());
                             
                             try (java.io.InputStream input = getContentResolver().openInputStream(uri);
                                  java.io.FileOutputStream output = new java.io.FileOutputStream(tempFile)) {
@@ -3422,7 +3422,7 @@ public class MainActivity extends AppCompatActivity {
                                         output.write(buffer, 0, bytesRead);
                                         totalBytes += bytesRead;
                                     }
-                                    android.util.Log.d("ARMSX2_CHD", "Copied " + totalBytes + " bytes to cache");
+                                    android.util.Log.d("RETROps2_CHD", "Copied " + totalBytes + " bytes to cache");
                                     return tempFile.getAbsolutePath();
                                 }
                             }
@@ -3433,16 +3433,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } catch (Throwable e) {
-            android.util.Log.e("ARMSX2_CHD", "Exception in getFilePathFromUri: " + e.getMessage(), e);
+            android.util.Log.e("RETROps2_CHD", "Exception in getFilePathFromUri: " + e.getMessage(), e);
         }
-        android.util.Log.w("ARMSX2_CHD", "getFilePathFromUri returning null - failed to resolve path");
+        android.util.Log.w("RETROps2_CHD", "getFilePathFromUri returning null - failed to resolve path");
         return null;
     }
 
     private void promptForChdSave(String chdCachePath, String displayName) {
         File chdFile = new File(chdCachePath);
         if (!chdFile.exists()) {
-            android.util.Log.e("ARMSX2_CHD", "CHD file missing in cache, cannot prompt for save: " + chdCachePath);
+            android.util.Log.e("RETROps2_CHD", "CHD file missing in cache, cannot prompt for save: " + chdCachePath);
             showConversionResult(false, "Converted file could not be found. Please try converting again.");
             return;
         }
@@ -3463,7 +3463,7 @@ public class MainActivity extends AppCompatActivity {
             baseName = baseName + ".chd";
         }
 
-        android.util.Log.d("ARMSX2_CHD", "Prompting user to save CHD as: " + baseName);
+        android.util.Log.d("RETROps2_CHD", "Prompting user to save CHD as: " + baseName);
 
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -3474,12 +3474,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean saveChdToUri(File chdFile, Uri destinationUri) {
-        android.util.Log.d("ARMSX2_CHD", "Saving CHD from cache to destination: " + destinationUri);
+        android.util.Log.d("RETROps2_CHD", "Saving CHD from cache to destination: " + destinationUri);
         try (java.io.FileInputStream input = new java.io.FileInputStream(chdFile);
              java.io.OutputStream output = getContentResolver().openOutputStream(destinationUri, "w")) {
 
             if (output == null) {
-                android.util.Log.e("ARMSX2_CHD", "Content resolver returned null output stream for destination");
+                android.util.Log.e("RETROps2_CHD", "Content resolver returned null output stream for destination");
                 return false;
             }
 
@@ -3491,10 +3491,10 @@ public class MainActivity extends AppCompatActivity {
                 totalBytes += bytesRead;
             }
             output.flush();
-            android.util.Log.d("ARMSX2_CHD", "Wrote " + totalBytes + " bytes to destination URI");
+            android.util.Log.d("RETROps2_CHD", "Wrote " + totalBytes + " bytes to destination URI");
             return true;
         } catch (Throwable e) {
-            android.util.Log.e("ARMSX2_CHD", "Failed to copy CHD to destination: " + e.getMessage(), e);
+            android.util.Log.e("RETROps2_CHD", "Failed to copy CHD to destination: " + e.getMessage(), e);
             return false;
         }
     }
