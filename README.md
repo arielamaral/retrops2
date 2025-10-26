@@ -64,7 +64,7 @@ Originally as a curious idea the react native screens were just an experiment i 
 ```
 
 
-2. Comple ARMSX2 With the react native core:
+2. Compile ARMSX2 With the react native core:
 ```sh
 ./gradlew assembleDebug -PenableRN=true
 ```
