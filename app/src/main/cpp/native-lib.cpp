@@ -38,6 +38,7 @@ namespace
 {
 	static jclass s_native_app_class = nullptr;
 	static jmethodID s_on_pad_vibration = nullptr;
+    static jmethodID s_native_ensure_resource_dir = nullptr;
 
 	static jclass s_ra_bridge_class = nullptr;
 	static jmethodID s_ra_notify_login_requested = nullptr;
@@ -63,6 +64,40 @@ namespace
 			env->ExceptionClear();
 		}
 	}
+
+    static bool EnsureNativeAppMethods(JNIEnv* env)
+    {
+        if (!env)
+            return false;
+
+        if (!s_native_app_class)
+        {
+            jclass local = env->FindClass("kr/co/iefriends/pcsx2/NativeApp");
+            if (!local)
+            {
+                ClearJNIExceptions(env);
+                return false;
+            }
+
+            s_native_app_class = reinterpret_cast<jclass>(env->NewGlobalRef(local));
+            env->DeleteLocalRef(local);
+            if (!s_native_app_class)
+            {
+                ClearJNIExceptions(env);
+                return false;
+            }
+        }
+
+        if (!s_on_pad_vibration)
+            s_on_pad_vibration = env->GetStaticMethodID(s_native_app_class, "onPadVibration", "(IFF)V");
+
+        if (!s_native_ensure_resource_dir)
+            s_native_ensure_resource_dir = env->GetStaticMethodID(
+                s_native_app_class, "ensureResourceSubdirectoryCopied", "(Ljava/lang/String;)V");
+
+        ClearJNIExceptions(env);
+        return s_native_app_class != nullptr;
+    }
 
 	static bool EnsureRetroAchievementsBridge(JNIEnv* env)
 	{
@@ -172,29 +207,34 @@ namespace
 	}
 } 
 
+namespace Host::Internal
+{
+void EnsureAndroidResourceSubdirCopied(const char* relative_path)
+{
+    auto* env = static_cast<JNIEnv*>(SDL_GetAndroidJNIEnv());
+    if (!env)
+        return;
+
+    if (!EnsureNativeAppMethods(env) || !s_native_ensure_resource_dir)
+        return;
+
+    const char* safe_path = relative_path ? relative_path : "";
+    jstring j_path = env->NewStringUTF(safe_path);
+    env->CallStaticVoidMethod(s_native_app_class, s_native_ensure_resource_dir, j_path);
+    if (j_path)
+        env->DeleteLocalRef(j_path);
+    ClearJNIExceptions(env);
+}
+} // namespace Host::Internal
+
 void AndroidUpdatePadVibration(u32 pad_index, float large_intensity, float small_intensity)
 {
     auto* env = static_cast<JNIEnv*>(SDL_GetAndroidJNIEnv());
     if (!env)
         return;
 
-    if (!s_native_app_class)
-    {
-        jclass local = env->FindClass("kr/co/iefriends/pcsx2/NativeApp");
-        if (!local)
-            return;
-        s_native_app_class = reinterpret_cast<jclass>(env->NewGlobalRef(local));
-        env->DeleteLocalRef(local);
-        if (!s_native_app_class)
-            return;
-    }
-
-    if (!s_on_pad_vibration)
-    {
-        s_on_pad_vibration = env->GetStaticMethodID(s_native_app_class, "onPadVibration", "(IFF)V");
-        if (!s_on_pad_vibration)
-            return;
-    }
+    if (!EnsureNativeAppMethods(env) || !s_on_pad_vibration)
+        return;
 
     env->CallStaticVoidMethod(s_native_app_class, s_on_pad_vibration, static_cast<jint>(pad_index),
                               static_cast<jfloat>(large_intensity), static_cast<jfloat>(small_intensity));

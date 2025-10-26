@@ -59,6 +59,18 @@ public class NativeApp {
 		sDataRootOverride = path;
 	}
 
+	public static void ensureResourceSubdirectoryCopied(String relativePath) {
+		Context context = getContext();
+		if (context == null) {
+			return;
+		}
+		String assetPath = "resources";
+		if (!TextUtils.isEmpty(relativePath)) {
+			assetPath = assetPath + "/" + relativePath;
+		}
+		DataDirectoryManager.copyAssetAll(context, assetPath);
+	}
+
 	public static void reinitializeDataRoot(String path) {
 		if (hasNoNativeBinary || TextUtils.isEmpty(path)) {
 			return;

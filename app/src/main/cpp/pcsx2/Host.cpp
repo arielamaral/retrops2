@@ -3,6 +3,7 @@
 
 #include "BuildVersion.h"
 #include "GS.h"
+#include "Config.h"
 #include "GS/Renderers/HW/GSTextureReplacements.h"
 #include "Host.h"
 #include "LayeredSettingsInterface.h"
@@ -36,6 +37,24 @@ namespace Host
 	static std::vector<char> s_translation_string_cache;
 	static u32 s_translation_string_cache_pos;
 } // namespace Host
+
+bool Host::EnsureResourceSubdirectory(const char* relative_path)
+{
+	if (!relative_path || !relative_path[0])
+		return true;
+
+	const std::string user_dir(Path::Combine(EmuFolders::UserResources, relative_path));
+	if (FileSystem::DirectoryExists(user_dir.c_str()))
+		return true;
+
+	const std::string bundled_dir(Path::Combine(EmuFolders::Resources, relative_path));
+	if (FileSystem::DirectoryExists(bundled_dir.c_str()))
+		return true;
+
+	Internal::EnsureAndroidResourceSubdirCopied(relative_path);
+
+	return FileSystem::DirectoryExists(user_dir.c_str()) || FileSystem::DirectoryExists(bundled_dir.c_str());
+}
 
 std::pair<const char*, u32> Host::LookupTranslationString(const std::string_view context, const std::string_view msg)
 {
@@ -363,6 +382,12 @@ SettingsInterface* Host::Internal::GetBaseSettingsLayer()
 {
 	return s_layered_settings_interface.GetLayer(LayeredSettingsInterface::LAYER_BASE);
 }
+
+#ifndef __ANDROID__
+void Host::Internal::EnsureAndroidResourceSubdirCopied(const char*)
+{
+}
+#endif
 
 SettingsInterface* Host::Internal::GetGameSettingsLayer()
 {

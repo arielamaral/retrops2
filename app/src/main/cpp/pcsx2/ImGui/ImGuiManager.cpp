@@ -402,6 +402,9 @@ void ImGuiManager::SetKeyMap()
 
 bool ImGuiManager::LoadFontData()
 {
+	if (!Host::EnsureResourceSubdirectory("fonts"))
+		return false;
+
 	if (s_standard_font_data.empty())
 	{
 		pxAssertRel(!s_font_path.empty(), "Font path has not been set.");

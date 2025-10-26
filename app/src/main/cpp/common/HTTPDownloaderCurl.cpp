@@ -211,7 +211,11 @@ else
 	curl_easy_setopt(req->handle, CURLOPT_PRIVATE, req);
 	curl_easy_setopt(req->handle, CURLOPT_FOLLOWLOCATION, 1L);
 
-
+#if defined(__ANDROID__)
+	// TESTING PURPOSES ONLY HOT FIX
+	curl_easy_setopt(req->handle, CURLOPT_SSL_VERIFYPEER, 0L);
+	curl_easy_setopt(req->handle, CURLOPT_SSL_VERIFYHOST, 0L);
+#endif
 
 	if (request->type == Request::Type::Post)
 	{

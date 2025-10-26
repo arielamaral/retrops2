@@ -79,6 +79,10 @@ namespace Host
 	/// Copies the provided text to the host's clipboard, if present.
 	bool CopyTextToClipboard(const std::string_view text);
 
+	/// Ensures that a resource subdirectory exists in either the bundled resources directory or the
+	/// user-overridable resources directory.
+	bool EnsureResourceSubdirectory(const char* relative_path);
+
 	/// Requests settings reset. Can be called from any thread, will call back and apply on the CPU thread.
 	bool RequestResetSettings(bool folders, bool core, bool controllers, bool hotkeys, bool ui);
 
@@ -148,6 +152,9 @@ namespace Host
 
 	namespace Internal
 	{
+		/// Requests that the Android frontend copy the specified resource subdirectory from assets.
+		void EnsureAndroidResourceSubdirCopied(const char* relative_path);
+
 		/// Retrieves the base settings layer. Must call with lock held.
 		SettingsInterface* GetBaseSettingsLayer();
 
