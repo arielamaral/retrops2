@@ -21,13 +21,6 @@ uniform uvec4 const1;
 uniform ivec2 srcOffset;
 
 // Sampler binding defaults to 0 if not explicitly set; texture unit 0 is used in code.
-#ifdef GL_ES
-precision highp float;
-precision highp int;
-precision highp sampler2D;
-precision highp image2D;
-#endif
-
 uniform sampler2D imgSrc;
 layout(binding=0, rgba8) uniform writeonly image2D imgDst;
 
@@ -56,17 +49,17 @@ void main()
 	// Filter.
 	AF4 c = vec4(0.0f);
 	CasFilter(c.r, c.g, c.b, gxy, const0, const1, CAS_SHARPEN_ONLY);
-	imageStore(imgDst, ivec2(gxy), c);
+	imageStore(imgDst, ASU2(gxy), c);
 	gxy.x += 8u;
 
 	CasFilter(c.r, c.g, c.b, gxy, const0, const1, CAS_SHARPEN_ONLY);
-	imageStore(imgDst, ivec2(gxy), c);
+	imageStore(imgDst, ASU2(gxy), c);
 	gxy.y += 8u;
 
 	CasFilter(c.r, c.g, c.b, gxy, const0, const1, CAS_SHARPEN_ONLY);
-	imageStore(imgDst, ivec2(gxy), c);
+	imageStore(imgDst, ASU2(gxy), c);
 	gxy.x -= 8u;
 
 	CasFilter(c.r, c.g, c.b, gxy, const0, const1, CAS_SHARPEN_ONLY);
-	imageStore(imgDst, ivec2(gxy), c);
+	imageStore(imgDst, ASU2(gxy), c);
 }
