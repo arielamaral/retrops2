@@ -1007,6 +1007,7 @@ int FileSystem::OpenFDFileContent(const char* filename)
 }
 
 extern "C"
+#ifndef DISABLE_DISCORD_ANDROID
 JNIEXPORT void JNICALL
 Java_kr_co_iefriends_pcsx2_DiscordBridge_nativeConfigure(JNIEnv* env, jclass, jlong application_id,
                                                          jstring scheme, jstring display_name, jstring image_key)
@@ -1078,6 +1079,52 @@ Java_kr_co_iefriends_pcsx2_DiscordBridge_nativeConsumeLastError(JNIEnv* env, jcl
         return nullptr;
     return env->NewStringUTF(error.c_str());
 }
+#else
+// Discord disabled - provide stub implementations
+JNIEXPORT void JNICALL
+Java_kr_co_iefriends_pcsx2_DiscordBridge_nativeConfigure(JNIEnv*, jclass, jlong, jstring, jstring, jstring) {}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_kr_co_iefriends_pcsx2_DiscordBridge_nativeProvideStoredToken(JNIEnv*, jclass, jstring, jstring, jstring, jlong, jstring) {}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_kr_co_iefriends_pcsx2_DiscordBridge_nativeBeginAuthorize(JNIEnv*, jclass) {}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_kr_co_iefriends_pcsx2_DiscordBridge_nativeSetAppForeground(JNIEnv*, jclass, jboolean) {}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_kr_co_iefriends_pcsx2_DiscordBridge_nativePollCallbacks(JNIEnv*, jclass) {}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_kr_co_iefriends_pcsx2_DiscordBridge_nativeClearTokens(JNIEnv*, jclass) {}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_kr_co_iefriends_pcsx2_DiscordBridge_nativeIsLoggedIn(JNIEnv*, jclass)
+{
+    return JNI_FALSE;
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_kr_co_iefriends_pcsx2_DiscordBridge_nativeIsClientReady(JNIEnv*, jclass)
+{
+    return JNI_FALSE;
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_kr_co_iefriends_pcsx2_DiscordBridge_nativeConsumeLastError(JNIEnv*, jclass)
+{
+    return nullptr;
+}
+#endif
 
 
 

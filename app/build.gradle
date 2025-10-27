@@ -52,7 +52,7 @@ android {
     defaultConfig {
     applicationId "come.nanodata.armsx2"
         minSdk 26
-        targetSdk 36
+        targetSdk 34
         versionCode 11
         versionName "1.0 REL"
 
@@ -63,7 +63,8 @@ android {
         externalNativeBuild {
             cmake {
                 def stlLib = enableRN ? "c++_shared" : "c++_static"
-                arguments "-DANDROID=true", "-DCMAKE_BUILD_TYPE=Release", "-DANDROID_STL=${stlLib}", "-DENABLE_RAINTEGRATION=ON"
+                arguments "-DANDROID=true", "-DCMAKE_BUILD_TYPE=Release", "-DANDROID_STL=${stlLib}", "-DENABLE_RAINTEGRATION=ON", "-DDISABLE_DISCORD=ON"
+                cppFlags "-DDISABLE_DISCORD_ANDROID=1"
 //                arguments '-DANDROID=true','-DCMAKE_BUILD_TYPE=Debug','-DANDROID_STL=c++_static'
             }
         }
@@ -117,8 +118,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_21
-        targetCompatibility JavaVersion.VERSION_21
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     externalNativeBuild {
         cmake {

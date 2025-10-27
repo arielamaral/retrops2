@@ -2059,21 +2059,45 @@ bool GSDeviceVK::HasSurface() const
 
 bool GSDeviceVK::Create(GSVSyncMode vsync_mode, bool allow_present_throttle)
 {
+	Console.WriteLn("[RETROps2] GSDeviceVK::Create - Starting Vulkan device creation");
+
 	if (!GSDevice::Create(vsync_mode, allow_present_throttle))
+	{
+		Console.Error("[RETROps2] GSDevice::Create failed");
 		return false;
+	}
 
+	Console.WriteLn("[RETROps2] Creating Vulkan device and swapchain...");
 	if (!CreateDeviceAndSwapChain())
+	{
+		Console.Error("[RETROps2] CreateDeviceAndSwapChain failed");
 		return false;
+	}
 
+	Console.WriteLn("[RETROps2] Vulkan device created successfully");
+	Console.WriteLn("[RETROps2] GPU: %s", m_device_properties.deviceName);
+	Console.WriteLn("[RETROps2] Vendor ID: 0x%08X", m_device_properties.vendorID);
+	Console.WriteLn("[RETROps2] Device ID: 0x%08X", m_device_properties.deviceID);
+	Console.WriteLn("[RETROps2] Driver Version: %u", m_device_properties.driverVersion);
+	Console.WriteLn("[RETROps2] API Version: %u.%u.%u",
+		VK_VERSION_MAJOR(m_device_properties.apiVersion),
+		VK_VERSION_MINOR(m_device_properties.apiVersion),
+		VK_VERSION_PATCH(m_device_properties.apiVersion));
+
+	Console.WriteLn("[RETROps2] Checking Vulkan features...");
 	if (!CheckFeatures())
 	{
 		const u32 vendorID = m_device_properties.vendorID;
 		const u32 deviceID = m_device_properties.deviceID;
 
+		Console.Error("[RETROps2] CheckFeatures failed!");
+		Console.Error("[RETROps2] Vendor ID: 0x%08X, Device ID: 0x%08X", vendorID, deviceID);
+
 		// Check if this is a known problematic Adreno GPU
 		if (vendorID == 0x5143u)
 		{
 			const char* gpuName = m_device_properties.deviceName;
+			Console.Error("[RETROps2] Detected Adreno GPU: %s", gpuName);
 			Host::ReportFormattedErrorAsync("GS",
 				"Vulkan initialization failed on %s (Adreno GPU).\n\n"
 				"Your device may have better compatibility with OpenGL renderer.\n"
@@ -2087,6 +2111,8 @@ bool GSDeviceVK::Create(GSVSyncMode vsync_mode, bool allow_present_throttle)
 		}
 		return false;
 	}
+
+	Console.WriteLn("[RETROps2] Vulkan features check passed");
 
 	if (!CreateNullTexture())
 	{
@@ -2637,15 +2663,23 @@ bool GSDeviceVK::CreateDeviceAndSwapChain()
 
 bool GSDeviceVK::CheckFeatures()
 {
+	Console.WriteLn("[RETROps2] CheckFeatures() - Starting feature detection");
+
 	const VkPhysicalDeviceLimits& limits = m_device_properties.limits;
 	const u32 vendorID = m_device_properties.vendorID;
 	//const bool isAMD = (vendorID == 0x1002 || vendorID == 0x1022);
 	//const bool isNVIDIA = (vendorID == 0x10DE);
 
+	Console.WriteLn("[RETROps2] Vendor ID: 0x%08X", vendorID);
+	Console.WriteLn("[RETROps2] Device: %s", m_device_properties.deviceName);
+
 	m_features.framebuffer_fetch =
 		m_optional_extensions.vk_ext_rasterization_order_attachment_access && !GSConfig.DisableFramebufferFetch;
 	m_features.texture_barrier = GSConfig.OverrideTextureBarriers != 0;
 	m_features.broken_point_sampler = false;
+
+	Console.WriteLn("[RETROps2] Framebuffer fetch: %s", m_features.framebuffer_fetch ? "YES" : "NO");
+	Console.WriteLn("[RETROps2] Texture barrier: %s", m_features.texture_barrier ? "YES" : "NO");
 
 	// geometryShader is needed because gl_PrimitiveID is part of the Geometry SPIR-V Execution Model.
 	m_features.primitive_id = m_device_features.geometryShader;
@@ -2684,6 +2718,10 @@ bool GSDeviceVK::CheckFeatures()
 	// Mobile GPUs (Adreno/Mali) often emulate wide lines/points expensively; prefer vertex expansion there.
 	if (vendorID == 0x5143u || vendorID == 0x13B5u)
 	{
+		Console.WriteLn("[RETROps2] Detected mobile GPU - Vendor ID: 0x%08X", vendorID);
+		Console.WriteLn("[RETROps2] GPU Name: %s", m_device_properties.deviceName);
+		Console.WriteLn("[RETROps2] Applying mobile GPU workarounds...");
+
 		if (m_features.point_expand || m_features.line_expand)
 			Console.WriteLn("VK: Forcing vertex-based expansion for points/lines on mobile GPU (vendor 0x%X).", vendorID);
 		m_features.point_expand = false;
@@ -2694,8 +2732,15 @@ bool GSDeviceVK::CheckFeatures()
 		const u32 deviceID = m_device_properties.deviceID;
 		const bool isAdreno740 = (deviceID >= 0x43050a01 && deviceID <= 0x43050aff); // Adreno 740 device ID range
 
+		Console.WriteLn("[RETROps2] Checking for Adreno 740...");
+		Console.WriteLn("[RETROps2] Device ID: 0x%08X", deviceID);
+		Console.WriteLn("[RETROps2] Is Adreno 740: %s", isAdreno740 ? "YES" : "NO");
+
 		if (isAdreno740)
 		{
+			Console.Warning("[RETROps2] *** ADRENO 740 DETECTED (Qualcomm G3x Gen 2) ***");
+			Console.Warning("[RETROps2] GPU: %s", m_device_properties.deviceName);
+			Console.Warning("[RETROps2] Driver Version: %u", m_device_properties.driverVersion);
 			Console.Warning("VK: Detected Adreno 740 (Qualcomm G3x Gen 2).");
 			Console.Warning("VK: Applying workarounds for known driver issues.");
 
@@ -2749,8 +2794,12 @@ bool GSDeviceVK::CheckFeatures()
 	m_features.dxt_textures = m_device_features.textureCompressionBC;
 	m_features.bptc_textures = m_device_features.textureCompressionBC;
 
+	Console.WriteLn("[RETROps2] DXT textures: %s", m_features.dxt_textures ? "YES" : "NO");
+	Console.WriteLn("[RETROps2] BPTC textures: %s", m_features.bptc_textures ? "YES" : "NO");
+
 	if (!m_features.texture_barrier && !m_features.stencil_buffer)
 	{
+		Console.Warning("[RETROps2] WARNING: No texture barrier AND no stencil buffer!");
 		Host::AddKeyedOSDMessage("GSDeviceVK_NoTextureBarrierOrStencilBuffer",
 			TRANSLATE_STR("GS",
 				"Stencil buffers and texture barriers are both unavailable, this will break some graphical effects."),
@@ -2758,6 +2807,9 @@ bool GSDeviceVK::CheckFeatures()
 	}
 
 	m_max_texture_size = m_device_properties.limits.maxImageDimension2D;
+
+	Console.WriteLn("[RETROps2] Max texture size: %u", m_max_texture_size);
+	Console.WriteLn("[RETROps2] CheckFeatures() - COMPLETED SUCCESSFULLY");
 
 	return true;
 }

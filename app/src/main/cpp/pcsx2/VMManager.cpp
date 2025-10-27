@@ -57,10 +57,10 @@
 #include "IconsFontAwesome5.h"
 #include "IconsPromptFont.h"
 #include "cpuinfo.h"
-#if defined(__ANDROID__)
+#if defined(__ANDROID__) && !defined(DISABLE_DISCORD_ANDROID)
 #define DISCORDPP_IMPLEMENTATION
 #include "discordpp.h"
-#else
+#elif !defined(__ANDROID__)
 #include "discord_rpc.h"
 #endif
 #include "fmt/format.h"
@@ -205,7 +205,7 @@ static u64 s_session_accumulated_playtime = 0;
 
 static bool s_screensaver_inhibited = false;
 
-#if defined(__ANDROID__)
+#if defined(__ANDROID__) && !defined(DISABLE_DISCORD_ANDROID)
 static bool s_discord_presence_active = false;
 static bool s_discord_presence_paused = false;
 static std::mutex s_discord_mutex;
@@ -236,7 +236,7 @@ static bool s_discord_presence_active = false;
 static time_t s_discord_presence_time_epoch;
 #endif
 
-#if defined(__ANDROID__)
+#if defined(__ANDROID__) && !defined(DISABLE_DISCORD_ANDROID)
 namespace
 {
 JNIEnv* AndroidDiscordGetEnv()
@@ -491,6 +491,15 @@ void AndroidDiscordRecordSessionStartLocked()
 	s_discord_presence_time_epoch = std::time(nullptr);
 }
 } // namespace
+#elif defined(__ANDROID__) && defined(DISABLE_DISCORD_ANDROID)
+// Discord disabled for Android - empty stubs
+namespace {
+void AndroidDiscordNotifyVmStopped() {}
+void AndroidDiscordResetSessionLocked() {}
+void AndroidDiscordRecordSessionStartLocked() {}
+void AndroidDiscordApplyPresenceLocked() {}
+void AndroidDiscordEnsureClientConnected() {}
+} // namespace
 #endif
 
 // Making GSDumpReplayer.h dependent on R5900.h is a no-no, since the GS uses it.
@@ -721,9 +730,9 @@ bool VMManager::Internal::CPUThreadInitialize()
 
 void VMManager::Internal::CPUThreadShutdown()
 {
-#if defined(__ANDROID__)
+#if defined(__ANDROID__) && !defined(DISABLE_DISCORD_ANDROID)
 	AndroidDiscordNotifyVmStopped();
-#else
+#elif !defined(__ANDROID__)
 	ShutdownDiscordPresence();
 #endif
 
@@ -3988,7 +3997,7 @@ void VMManager::ReloadPINE()
 
 void VMManager::InitializeDiscordPresence()
 {
-#if defined(__ANDROID__)
+#if defined(__ANDROID__) && !defined(DISABLE_DISCORD_ANDROID)
 	std::shared_ptr<discordpp::Client> client;
 	{
 		std::lock_guard lock(s_discord_mutex);
@@ -4125,7 +4134,7 @@ void VMManager::InitializeDiscordPresence()
 		AndroidDiscordApplyPresenceLocked();
 	}
 	AndroidDiscordEnsureClientConnected();
-#else
+#elif !defined(DISABLE_DISCORD_ANDROID)
 	if (s_discord_presence_active)
 		return;
 
@@ -4139,7 +4148,7 @@ void VMManager::InitializeDiscordPresence()
 
 void VMManager::ShutdownDiscordPresence()
 {
-#if defined(__ANDROID__)
+#if defined(__ANDROID__) && !defined(DISABLE_DISCORD_ANDROID)
 	std::shared_ptr<discordpp::Client> client;
 	{
 		std::lock_guard lock(s_discord_mutex);
@@ -4163,7 +4172,7 @@ void VMManager::ShutdownDiscordPresence()
 	}
 
 	AndroidDiscordDispatchLoginStateChanged(false);
-#else
+#elif !defined(DISABLE_DISCORD_ANDROID)
 	if (!s_discord_presence_active)
 		return;
 
@@ -4176,7 +4185,7 @@ void VMManager::ShutdownDiscordPresence()
 
 void VMManager::UpdateDiscordPresence(bool update_session_time)
 {
-#if defined(__ANDROID__)
+#if defined(__ANDROID__) && !defined(DISABLE_DISCORD_ANDROID)
 	std::lock_guard lock(s_discord_mutex);
 	if (!s_discord_presence_active)
 		return;
@@ -4199,7 +4208,7 @@ void VMManager::UpdateDiscordPresence(bool update_session_time)
 	}
 
 	AndroidDiscordApplyPresenceLocked();
-#else
+#elif !defined(DISABLE_DISCORD_ANDROID)
 	if (!s_discord_presence_active)
 		return;
 
@@ -4235,7 +4244,7 @@ void VMManager::UpdateDiscordPresence(bool update_session_time)
 
 void VMManager::PollDiscordPresence()
 {
-#if defined(__ANDROID__)
+#if defined(__ANDROID__) && !defined(DISABLE_DISCORD_ANDROID)
 	{
 		std::lock_guard lock(s_discord_mutex);
 		if (!s_discord_presence_active)
@@ -4243,7 +4252,7 @@ void VMManager::PollDiscordPresence()
 	}
 
 	discordpp::RunCallbacks();
-#else
+#elif !defined(DISABLE_DISCORD_ANDROID)
 	if (!s_discord_presence_active)
 		return;
 
@@ -4251,7 +4260,7 @@ void VMManager::PollDiscordPresence()
 #endif
 }
 
-#if defined(__ANDROID__)
+#if defined(__ANDROID__) && !defined(DISABLE_DISCORD_ANDROID)
 void VMManager::AndroidDiscordConfigure(uint64_t app_id, std::string custom_scheme, std::string display_name,
 	std::string large_image_key)
 {

@@ -42,6 +42,7 @@
 #include <limits.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/file.h>
 #include <unistd.h>
 #endif
 
@@ -2654,13 +2655,13 @@ bool FileSystem::DeleteSymbolicLink(const char* path, Error* error)
 
 FileSystem::POSIXLock::POSIXLock(int fd)
 {
-	if (lockf(fd, F_LOCK, 0) == 0)
+	if (flock(fd, LOCK_EX) == 0)
 	{
 		m_fd = fd;
 	}
 	else
 	{
-		Console.Error("lockf() failed: %d", errno);
+		Console.Error("flock() failed: %d", errno);
 		m_fd = -1;
 	}
 }
@@ -2670,9 +2671,9 @@ FileSystem::POSIXLock::POSIXLock(std::FILE* fp)
 	m_fd = fileno(fp);
 	if (m_fd >= 0)
 	{
-		if (lockf(m_fd, F_LOCK, 0) != 0)
+		if (flock(m_fd, LOCK_EX) != 0)
 		{
-			Console.Error("lockf() failed: %d", errno);
+			Console.Error("flock() failed: %d", errno);
 			m_fd = -1;
 		}
 	}
@@ -2681,7 +2682,7 @@ FileSystem::POSIXLock::POSIXLock(std::FILE* fp)
 FileSystem::POSIXLock::~POSIXLock()
 {
 	if (m_fd >= 0)
-		lockf(m_fd, F_ULOCK, m_fd);
+		flock(m_fd, LOCK_UN);
 }
 
 #endif

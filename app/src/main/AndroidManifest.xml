@@ -74,20 +74,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize"
             android:exported="false" />
 
-        <activity
-            android:name="com.discord.socialsdk.AuthenticationActivity"
-            tools:node="merge">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:scheme="${discordCallbackScheme}"/>
-                <data
-                    android:scheme="${discordCallbackScheme}"
-                    android:pathPrefix="/authorize/callback" />
-            </intent-filter>
-        </activity>
+        <!-- Discord AuthenticationActivity removed - Discord integration disabled -->
 
         <!-- React Native screen host activity runs in a seperate process should maybe finalize i once it's golden -->
         <activity

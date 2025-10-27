@@ -1183,9 +1183,14 @@ target_link_libraries(PCSX2_FLAGS INTERFACE
 )
 
 if(ANDROID)
-	target_link_libraries(PCSX2_FLAGS INTERFACE
-		discord_partner_sdk::discord_partner_sdk
-	)
+	if(TARGET discord_partner_sdk::discord_partner_sdk)
+		target_link_libraries(PCSX2_FLAGS INTERFACE
+			discord_partner_sdk::discord_partner_sdk
+		)
+		message(STATUS "Discord Partner SDK found and will be linked")
+	else()
+		message(WARNING "Discord Partner SDK not found - Discord integration disabled")
+	endif()
 else()
 	target_link_libraries(PCSX2_FLAGS INTERFACE
 		discord-rpc

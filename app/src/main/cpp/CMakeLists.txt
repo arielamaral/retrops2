@@ -39,7 +39,10 @@ include(BuildParameters)
 include(SearchForStuff)
 
 if(ANDROID)
-	find_package(discord_partner_sdk REQUIRED CONFIG)
+	find_package(discord_partner_sdk QUIET CONFIG)
+	if(NOT discord_partner_sdk_FOUND)
+		message(WARNING "Discord Partner SDK not found - Discord integration will be disabled")
+	endif()
 endif()
 
 # Must be done after SearchForStuff
