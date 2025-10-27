@@ -42,7 +42,10 @@ if(ANDROID)
 	find_package(discord_partner_sdk QUIET CONFIG)
 	if(NOT discord_partner_sdk_FOUND)
 		message(WARNING "Discord Partner SDK not found - Discord integration will be disabled")
+		add_compile_definitions(DISABLE_DISCORD_ANDROID=1)
 	endif()
+	# Link all native binaries with 16KB page support for newer devices (critical for G3x Gen 2).
+	add_link_options(-Wl,-z,max-page-size=16384)
 endif()
 
 # Must be done after SearchForStuff

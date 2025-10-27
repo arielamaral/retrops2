@@ -2730,7 +2730,7 @@ bool GSDeviceVK::CheckFeatures()
 		// Additional workarounds for Qualcomm Adreno 740 (G3x Gen 2) and similar GPUs
 		// These GPUs may have driver issues with certain Vulkan features
 		const u32 deviceID = m_device_properties.deviceID;
-		const bool isAdreno740 = (deviceID >= 0x43050a01 && deviceID <= 0x43050aff); // Adreno 740 device ID range
+		const bool isAdreno740 = (deviceID >= 0x43050a00 && deviceID <= 0x43050aff); // Adreno 740 device ID range (includes 0x43050A00 for Ayaneo Pocket ACE)
 
 		Console.WriteLn("[RETROps2] Checking for Adreno 740...");
 		Console.WriteLn("[RETROps2] Device ID: 0x%08X", deviceID);
@@ -5712,8 +5712,8 @@ GSTextureVK* GSDeviceVK::SetupPrimitiveTrackingDATE(GSHWDrawConfig& config)
 
 void GSDeviceVK::RenderHW(GSHWDrawConfig& config)
 {
-
 	const GSVector2i rtsize(config.rt ? config.rt->GetSize() : config.ds->GetSize());
+
 	GSTextureVK* draw_rt = static_cast<GSTextureVK*>(config.rt);
 	GSTextureVK* draw_ds = static_cast<GSTextureVK*>(config.ds);
 	GSTextureVK* draw_rt_clone = nullptr;

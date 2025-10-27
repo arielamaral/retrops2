@@ -35,3 +35,6 @@ build-debug-version.log
 build-final-attempt.log
 build-fresh.log
 build-success.log
+ayaneo-live-log.txt
+build-final.log
+build-with-discord-flag.log
