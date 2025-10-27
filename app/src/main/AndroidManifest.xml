@@ -69,21 +69,27 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".OnboardingActivity"
+            android:exported="false"
+            android:screenOrientation="unspecified"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize" />
+        <activity
             android:name=".SettingsActivity"
             android:screenOrientation="unspecified"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize"
             android:exported="false" />
 
-        <!-- Discord AuthenticationActivity - dynamically enabled/disabled based on SDK availability -->
         <activity
             android:name="com.discord.socialsdk.AuthenticationActivity"
             android:exported="${discordAuthActivityExported}"
-            android:enabled="${discordAuthActivityEnabled}">
+            android:enabled="${discordAuthActivityEnabled}"
+            tools:node="merge">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="${discordCallbackScheme}"/>
+                <data
+                    android:scheme="${discordCallbackScheme}"/>
                 <data
                     android:scheme="${discordCallbackScheme}"
                     android:pathPrefix="/authorize/callback" />
