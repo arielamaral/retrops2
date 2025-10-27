@@ -39,7 +39,12 @@ include(BuildParameters)
 include(SearchForStuff)
 
 if(ANDROID)
-	find_package(discord_partner_sdk REQUIRED CONFIG)
+	find_package(discord_partner_sdk CONFIG)
+	if(discord_partner_sdk_FOUND)
+		message(STATUS "Discord Partner SDK found - Discord integration enabled")
+	else()
+		message(STATUS "Discord Partner SDK not found - Discord integration disabled")
+	endif()
 	# Link all native binaries with 16KB page support for newer devices.
 	add_link_options(-Wl,-z,max-page-size=16384)
 endif()
